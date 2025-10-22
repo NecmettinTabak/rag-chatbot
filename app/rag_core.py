@@ -68,7 +68,7 @@ def ask_gemini(question: str):
             return "FAISS veritabanı oluşturulamadı, lütfen yeniden başlatın."
 
         # 🔹 FAISS'ten ilgili dokümanları getir
-        docs = db.similarity_search(question, k=5)
+        docs = db.similarity_search(question, k=3)
         context = "\n\n".join([doc.page_content for doc in docs])
 
         # 🔹 Prompt oluştur
@@ -86,7 +86,8 @@ def ask_gemini(question: str):
         """
 
         # 🔹 Gemini'den yanıt al
-        response = model.generate_content(prompt)
+        response = model.generate_content(prompt, request_options={"timeout": 30})
+
         return response.text
 
     except Exception as e:
