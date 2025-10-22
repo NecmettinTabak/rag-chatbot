@@ -4,6 +4,7 @@ import google.generativeai as genai
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from datasets import load_dataset  # ✅ FAISS yeniden inşa için gerekli
+import time
 
 
 # ✅ Ortam değişkenlerini yükle
@@ -62,19 +63,21 @@ model = genai.GenerativeModel("gemini-2.5-flash")
 
 
 def ask_gemini(question: str):
-    """FAISS + Gemini tabanlı akıllı cevaplama"""
+    """FAISS + Gemini tabanlı akıllı cevaplama (streaming + timeout ile optimize edilmiş)"""
     try:
         if db is None:
             return "FAISS veritabanı oluşturulamadı, lütfen yeniden başlatın."
 
-        # 🔹 FAISS'ten ilgili dokümanları getir
-        docs = db.similarity_search(question, k=3)
+        start_time = time.time()
+
+        # 🔹 FAISS'ten ilgili dokümanları getir (daha küçük k değeriyle)
+        docs = db.similarity_search(question, k=2)
         context = "\n\n".join([doc.page_content for doc in docs])
 
         # 🔹 Prompt oluştur
         prompt = f"""
         Sen bir bankacılık destek asistanısın.
-        Aşağıdaki bağlamı kullanarak kullanıcının sorusuna net ve doğru bir yanıt ver.
+        Aşağıdaki bağlamı kullanarak kullanıcının sorusuna açık, kısa ve doğru bir yanıt ver.
 
         Bağlam:
         {context}
@@ -85,10 +88,25 @@ def ask_gemini(question: str):
         Cevap:
         """
 
-        # 🔹 Gemini'den yanıt al
-        response = model.generate_content(prompt, request_options={"timeout": 30})
+        # 🔹 Gemini'den streaming modunda yanıt al (timeout korumalı)
+        response = model.generate_content(
+            prompt,
+            stream=True,
+            request_options={"timeout": 25},
+            generation_config={"max_output_tokens": 256}
+        )
 
-        return response.text
+        result_text = ""
+        for chunk in response:
+            if chunk.text:
+                result_text += chunk.text
+            # 30 saniye limit koruması (Streamlit Cloud safety)
+            if time.time() - start_time > 28:
+                return "⏱️ Yanıt süresi aşıldı, lütfen tekrar deneyin."
+
+        return result_text.strip() or "⚠️ Model bir yanıt döndüremedi."
 
     except Exception as e:
+        if "Deadline" in str(e) or "504" in str(e):
+            return "⏱️ Sunucu yanıt süresi doldu — lütfen tekrar deneyin."
         return f"Bir hata oluştu: {e}"
