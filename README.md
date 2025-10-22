@@ -123,4 +123,8 @@ rag-chatbot/
 ├── .gitignore
 └── README.md
 
+## 🚀 Deploy Link
+Canlı demoya buradan ulaşabilirsiniz:  
+🔗 [https://rag-chatbot-lzgfw8ryl8vsstgba4kqg.streamlit.app](https://rag-chatbot-lzgfw8ryl8vsstgba4kqg.streamlit.app)
+
 
