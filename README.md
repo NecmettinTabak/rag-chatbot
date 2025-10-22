@@ -111,17 +111,14 @@ streamlit run app/app.py
 
 
 📦 Proje Yapısı
-
 rag-chatbot/
 │
 ├── app/
-
 │   ├── build_index.py
 │   ├── rag_core.py
 │   ├── app.py
 │   └── db/faiss/
 │
-
 ├── db/
 ├── gereksinimler.txt
 ├── .gitignore
