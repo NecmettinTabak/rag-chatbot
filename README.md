@@ -23,12 +23,19 @@ Cevap Üretimi: Gemini API ile son cevap üretilir
 
 📊 Dataset
 
-Kullanılan veri setleri: 
-wasifis/bank-assistant-qa
+📊 Kullanılan Veri Setleri
 
-bitext/Bitext-retail-banking-llm-chatbot-training-dataset
+1️⃣ Bank Assistant QA Dataset
+🔗 https://huggingface.co/datasets/wasifis/bank-assistant-qa
 
-Bu veri setleri, banka müşteri desteği, hesap işlemleri, finansal terimler gibi konularda gerçek diyalogları içerir.
+📝 Banka müşteri temsilcisi ile kullanıcı arasında geçen soru-cevap diyaloglarını içerir.
+Finansal işlemler, kredi, hesap yönetimi ve destek senaryoları üzerine odaklıdır.
+
+2️⃣ Bitext Retail Banking Chatbot Dataset
+🔗 https://huggingface.co/datasets/bitext/Bitext-retail-banking-llm-chatbot-training-dataset
+
+📝 Finans ve perakende bankacılığı için oluşturulmuş büyük ölçekli chatbot eğitimi veri setidir.
+Gerçek müşteri taleplerine benzer örnek diyaloglar, intent ve response çiftleri içerir.
 
 ✨ Öne Çıkan Özellikler
 
