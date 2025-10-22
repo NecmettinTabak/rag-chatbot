@@ -1,0 +1,20 @@
+# Virtual env
+.venv/
+.venv311/
+
+# IDE
+.idea/
+
+# Cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Data & indexes
+db/faiss*/
+*.faiss
+*.bin
+*.idx
+
+# Secrets
+.env
