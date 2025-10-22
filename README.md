@@ -21,8 +21,6 @@ Sorgu Eşleştirme: Kullanıcının sorusu embedding’e dönüştürülür, en 
 
 Cevap Üretimi: Gemini API ile son cevap üretilir
 
-📊 Dataset
-
 📊 Kullanılan Veri Setleri
 
 1️⃣ Bank Assistant QA Dataset
@@ -60,6 +58,7 @@ Web Arayüzü (opsiyonel)	Streamlit
 🧠 Kurulum ve Çalıştırma
 
 ⚙️ Kurulum ve Çalıştırma (Windows + PyCharm ortamı için)
+
 1️⃣ Python 3.11 sanal ortamı oluştur
 
 Projeni PyCharm veya PowerShell’de açtıktan sonra terminale şu komutu yaz:
