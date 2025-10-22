@@ -1,5 +1,5 @@
 import streamlit as st
-from rag_core import ask_gemini
+from app.rag_core import ask_gemini
 
 # 🧭 Sayfa ayarları
 st.set_page_config(page_title="💬 Finans Asistan Chatbot", page_icon="💳", layout="wide")

@@ -11,10 +11,10 @@ __pycache__/
 *.pyo
 
 # Data & indexes
-db/faiss*/
-*.faiss
-*.bin
-*.idx
+#db/faiss*/
+#*.faiss
+#*.bin
+#*.idx
 
 # Secrets
 .env
