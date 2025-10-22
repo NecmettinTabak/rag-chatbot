@@ -1,15 +1,20 @@
 import os
+import time
 from dotenv import load_dotenv
 import google.generativeai as genai
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
-from datasets import load_dataset  # ✅ FAISS yeniden inşa için gerekli
-import time
+from datasets import load_dataset
 
 
 # ✅ Ortam değişkenlerini yükle
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "..", ".env"))
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+
+# ✅ Google API yapılandırması (timeout burada tanımlanır)
+genai.configure(
+    api_key=os.getenv("GOOGLE_API_KEY"),
+    client_options={"api_endpoint": "https://generativelanguage.googleapis.com"}
+)
 
 # 📁 FAISS dizini
 DB_DIR = os.path.join(os.path.dirname(__file__), "db", "faiss")
@@ -58,19 +63,20 @@ except Exception:
     print("⚠️ FAISS index bulunamadı, yeniden oluşturuluyor...")
     db = build_faiss_index()
 
+
 # 🚀 Gemini modelini başlat
-model = genai.GenerativeModel("gemini-2.5-flash")
+model = genai.GenerativeModel("gemini-2.0-flash")
 
 
 def ask_gemini(question: str):
-    """FAISS + Gemini tabanlı akıllı cevaplama (streaming + timeout ile optimize edilmiş)"""
+    """FAISS + Gemini tabanlı akıllı cevaplama (Cloud optimizasyonlu)"""
     try:
         if db is None:
             return "FAISS veritabanı oluşturulamadı, lütfen yeniden başlatın."
 
         start_time = time.time()
 
-        # 🔹 FAISS'ten ilgili dokümanları getir (daha küçük k değeriyle)
+        # 🔹 FAISS'ten ilgili dokümanları getir (hız için k=2)
         docs = db.similarity_search(question, k=2)
         context = "\n\n".join([doc.page_content for doc in docs])
 
@@ -88,23 +94,17 @@ def ask_gemini(question: str):
         Cevap:
         """
 
-        # 🔹 Gemini'den streaming modunda yanıt al (timeout korumalı)
+        # 🔹 Streaming veya normal yanıt al
         response = model.generate_content(
             prompt,
-            stream=True,
-            request_options={"timeout": 25},
             generation_config={"max_output_tokens": 256}
         )
 
-        result_text = ""
-        for chunk in response:
-            if chunk.text:
-                result_text += chunk.text
-            # 30 saniye limit koruması (Streamlit Cloud safety)
-            if time.time() - start_time > 28:
-                return "⏱️ Yanıt süresi aşıldı, lütfen tekrar deneyin."
+        # 🔹 Timeout kontrolü (manuel)
+        if time.time() - start_time > 30:
+            return "⏱️ Yanıt süresi aşıldı, lütfen tekrar deneyin."
 
-        return result_text.strip() or "⚠️ Model bir yanıt döndüremedi."
+        return response.text.strip() if response.text else "⚠️ Model boş yanıt döndürdü."
 
     except Exception as e:
         if "Deadline" in str(e) or "504" in str(e):
