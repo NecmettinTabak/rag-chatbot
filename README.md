@@ -64,6 +64,8 @@ python -m venv .venv311
 PowerShell veya VSCode terminalinde:
 
 .venv311\Scripts\activate
+
+
 <img width="612" height="42" alt="image" src="https://github.com/user-attachments/assets/8b52d3e6-10cb-4762-a0b2-a93fc84fbc40" />
 
 
@@ -97,10 +99,12 @@ python app/app.py
 veya web arayüzü (Streamlit) olarak çalıştırmak istersen:
 
 streamlit run app/app.py
+
 <img width="867" height="170" alt="image" src="https://github.com/user-attachments/assets/794b25ab-49c3-4d29-aa5a-1880af65454f" />
 
 
 📦 Proje Yapısı
+
 rag-chatbot/
 │
 ├── app/
@@ -114,6 +118,4 @@ rag-chatbot/
 ├── .gitignore
 └── README.md
 
-🌐 Deploy Link
 
-(Varsa) https://finance-rag.streamlit.app/
